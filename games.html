@@ -1,9 +1,315 @@
-<script>
-const games = [
-  ["🪂", "Fortnite", "Action", "Drop in, build, and battle for victory."],
-  ["🎯", "1v1.LOL", "Action", "Build, aim, and battle in a fast 1v1 match."],
-  ["💼", "Don't Whack Your Boss", "Action", "A silly workplace choice game."],
-  ["📚", "Don't Whack Your Teacher", "Action", "A cartoon classroom choice game."],
-  ["🕵️", "Don't Whack the Thief", "Action", "Choose your move in this cartoon mystery game."]
-];
-</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Game Hub</title>
+
+  <style>
+    :root {
+      --background: #080b14;
+      --card: #12182a;
+      --line: #293555;
+      --text: #f5f7ff;
+      --muted: #9ca8c7;
+      --pink: #ff4fd8;
+      --blue: #55d6ff;
+      --green: #7dff9b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, #251052 0, transparent 32%),
+        radial-gradient(circle at 90% 20%, #063c56 0, transparent 28%),
+        var(--background);
+    }
+
+    .wrap {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    .hero {
+      padding: 55px 0 30px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 3px;
+    }
+
+    h1 {
+      margin: 12px 0;
+      font-size: clamp(42px, 8vw, 80px);
+      background: linear-gradient(
+        90deg,
+        var(--blue),
+        var(--pink),
+        var(--green)
+      );
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(18, 24, 42, 0.88);
+    }
+
+    #search {
+      flex: 1;
+      min-width: 210px;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      outline: none;
+      background: #0b101d;
+      color: white;
+      font-size: 15px;
+    }
+
+    #search:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 20px rgba(85, 214, 255, 0.25);
+    }
+
+    .filter {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #172039;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .filter:hover,
+    .filter.active {
+      border-color: var(--pink);
+      background: #351a49;
+      color: white;
+      box-shadow: 0 0 18px rgba(255, 79, 216, 0.2);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      padding: 28px 0;
+    }
+
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, #161e34, #0e1422);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--blue);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.45),
+                  0 0 28px rgba(85, 214, 255, 0.2);
+    }
+
+    .icon {
+      font-size: 44px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .card h2 {
+      margin: 10px 0 7px;
+    }
+
+    .description {
+      min-height: 42px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .play {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--blue), #7d7bff);
+      color: #07101d;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .play:hover {
+      filter: brightness(1.15);
+    }
+
+    #empty {
+      display: none;
+      padding: 35px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: #697593;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding-top: 35px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="eyebrow">WELCOME TO THE ARCADE</div>
+      <h1>NEON GAME HUB</h1>
+      <p class="subtitle">Search and filter all your games.</p>
+    </header>
+
+    <nav class="toolbar">
+      <input id="search" type="search" placeholder="🔎 Search games...">
+
+      <button class="filter active" data-category="All">All</button>
+      <button class="filter" data-category="Arcade">Arcade</button>
+      <button class="filter" data-category="Puzzle">Puzzle</button>
+      <button class="filter" data-category="Classic">Classic</button>
+      <button class="filter" data-category="Action">Action</button>
+      <button class="filter" data-category="Adventure">Adventure</button>
+    </nav>
+
+    <section class="grid" id="gamesGrid"></section>
+
+    <div id="empty">
+      No games found. Try another search or category.
+    </div>
+
+    <footer>
+      Play responsibly · Neon Game Hub
+    </footer>
+  </main>
+
+  <script>
+    const games = [
+      ["⚡", "Clicker", "Arcade", "Click as fast as you can."],
+      ["🐍", "Snake", "Arcade", "Grow longer and beat your score."],
+      ["🚀", "Space Runner", "Arcade", "Dodge obstacles in space."],
+
+      ["❌", "Tic-Tac-Toe", "Classic", "Challenge a friend."],
+      ["🏓", "Pong", "Classic", "Keep the ball in play."],
+
+      ["🔢", "Guess the Number", "Puzzle", "Find the hidden number."],
+      ["🧠", "Memory Match", "Puzzle", "Test your memory."],
+      ["🧩", "2048", "Puzzle", "Combine tiles to reach 2048."],
+
+      ["🪂", "Fortnite", "Action", "Drop in, build, and battle for victory."],
+      ["🎯", "1v1.LOL", "Action", "Build, aim, and battle in a fast 1v1 match."],
+      ["💼", "Don't Whack Your Boss", "Action", "A silly workplace choice game."],
+      ["📚", "Don't Whack Your Teacher", "Action", "A cartoon classroom choice game."],
+      ["🕵️", "Don't Whack the Thief", "Action", "Choose your move in this cartoon mystery game."],
+
+      ["🕵️", "Breaking the Bank", "Adventure", "Choose your plan and try to break into the bank."],
+      ["🚔", "Escaping the Prison", "Adventure", "Make the right choices to escape."],
+      ["💎", "Stealing the Diamond", "Adventure", "Attempt the ultimate diamond heist."],
+      ["✈️", "Infiltrating the Airship", "Adventure", "Infiltrate the airship and choose your path."],
+      ["🔓", "Fleeing the Complex", "Adventure", "Escape the complex with clever decisions."],
+      ["🏁", "Completing the Mission", "Adventure", "Finish Henry Stickman's final mission."]
+    ];
+
+    const gamesGrid = document.getElementById("gamesGrid");
+    const search = document.getElementById("search");
+    const empty = document.getElementById("empty");
+
+    let selectedCategory = "All";
+
+    function showGames() {
+      const searchText = search.value.toLowerCase();
+
+      const filteredGames = games.filter(function (game) {
+        const matchesCategory =
+          selectedCategory === "All" ||
+          game[2] === selectedCategory;
+
+        const matchesSearch =
+          game[1].toLowerCase().includes(searchText);
+
+        return matchesCategory && matchesSearch;
+      });
+
+      gamesGrid.innerHTML = filteredGames.map(function (game) {
+        return `
+          <article class="card">
+            <div class="icon">${game[0]}</div>
+            <span class="tag">${game[2]}</span>
+            <h2>${game[1]}</h2>
+            <p class="description">${game[3]}</p>
+            <button class="play" onclick="selectGame('${game[1]}')">
+              PLAY NOW →
+            </button>
+          </article>
+        `;
+      }).join("");
+
+      empty.style.display =
+        filteredGames.length === 0 ? "block" : "none";
+    }
+
+    function selectGame(gameName) {
+      alert(
+        gameName +
+        " is selected. Add an approved game link or your own game page later."
+      );
+    }
+
+    document.querySelectorAll(".filter").forEach(function (button) {
+      button.addEventListener("click", function () {
+        document.querySelectorAll(".filter").forEach(function (item) {
+          item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        selectedCategory = button.dataset.category;
+        showGames();
+      });
+    });
+
+    search.addEventListener("input", showGames);
+
+    showGames();
+  </script>
+</body>
+</html>
