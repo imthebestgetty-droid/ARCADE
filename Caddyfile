@@ -1,0 +1,4 @@
+# Replace panel.example.com with your domain.
+panel.example.com {
+    reverse_proxy app:80
+}

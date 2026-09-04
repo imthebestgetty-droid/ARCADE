@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WaveRoom — Music</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b0b10;color:#fff}
+  .app{min-height:100vh;display:flex}
+  aside{width:230px;background:#111118;padding:28px 18px;border-right:1px solid #24242d}
+  .logo{font-size:24px;font-weight:800;margin:0 0 38px}
+  .logo span{color:#8b5cf6}
+  nav a{display:block;color:#aaa;text-decoration:none;padding:12px 14px;border-radius:10px;margin:5px 0}
+  nav a.active,nav a:hover{background:#211a35;color:#fff}
+  main{flex:1;padding:34px 42px 130px;max-width:1250px}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:20px}
+  h1{font-size:38px;margin:0 0 8px}
+  .sub{color:#9b9ba8;margin:0 0 28px}
+  .search{background:#17171f;border:1px solid #292934;color:#fff;border-radius:12px;padding:13px 16px;width:260px;outline:none}
+  .hero{padding:30px;border-radius:20px;background:linear-gradient(135deg,#271b45,#141420);display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+  .hero h2{font-size:30px;margin:0 0 8px}.hero p{color:#b9b5c4;margin:0 0 18px}
+  button{border:0;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer}
+  .play{background:#fff;color:#111}.play:hover{transform:scale(1.03)}
+  .section-title{display:flex;justify-content:space-between;align-items:center;margin:25px 0 15px}
+  .section-title h2{font-size:20px;margin:0}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .card{background:#15151d;padding:14px;border-radius:15px;border:1px solid #22222c;cursor:pointer}
+  .cover{aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:grid;place-items:center;font-size:42px;margin-bottom:12px}
+  .card:nth-child(2) .cover{background:linear-gradient(135deg,#06b6d4,#2563eb)}
+  .card:nth-child(3) .cover{background:linear-gradient(135deg,#f97316,#eab308)}
+  .card:nth-child(4) .cover{background:linear-gradient(135deg,#10b981,#14b8a6)}
+  .card strong{display:block;margin-bottom:4px}.card small{color:#999}
+  .tracks{background:#15151d;border:1px solid #22222c;border-radius:15px;overflow:hidden}
+  .track{display:grid;grid-template-columns:45px 1fr 90px 70px;align-items:center;padding:14px 18px;border-bottom:1px solid #24242d}
+  .track:last-child{border-bottom:0}.track:hover{background:#1b1b24}
+  .num{color:#777}.track small{color:#999}.time{color:#999;text-align:right}
+  .mini{background:#24242e;color:#fff;padding:8px 11px;border-radius:8px}
+  .player{position:fixed;left:0;right:0;bottom:0;height:92px;background:#121219;border-top:1px solid #292934;display:flex;align-items:center;gap:22px;padding:14px 28px}
+  .now{width:220px}.now strong{display:block}.now small{color:#999}
+  .controls{display:flex;align-items:center;gap:10px}.circle{width:42px;height:42px;border-radius:50%;padding:0}
+  .bar{flex:1;height:5px;background:#33333e;border-radius:5px;position:relative}.bar i{display:block;width:28%;height:100%;background:#8b5cf6;border-radius:5px}
+  @media(max-width:800px){aside{display:none}main{padding:24px 18px 130px}.grid{grid-template-columns:repeat(2,1fr)}.search{width:170px}.now{display:none}.player{padding:12px 16px}.hero{display:block}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="logo">Wave<span>Room</span></div>
+  <nav>
+    <a class="active" href="#">Home</a>
+    <a href="#">Discover</a>
+    <a href="#">Library</a>
+    <a href="#">Playlists</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="top">
+    <div><h1>Good evening 👋</h1><p class="sub">Listen to something you love.</p></div>
+    <input class="search" placeholder="Search music..." oninput="filterTracks(this.value)">
+  </div>
+
+  <section class="hero">
+    <div><h2>Your music, your vibe.</h2><p>Play your favorite songs and build your own collection.</p><button class="play" onclick="playSong('Midnight Drive')">▶ Play now</button></div>
+    <div style="font-size:80px">🎧</div>
+  </section>
+
+  <div class="section-title"><h2>Made for you</h2></div>
+  <div class="grid">
+    <div class="card" onclick="playSong('Midnight Drive')"><div class="cover">🌙</div><strong>Midnight Drive</strong><small>Neon Skies</small></div>
+    <div class="card" onclick="playSong('Ocean Lights')"><div class="cover">🌊</div><strong>Ocean Lights</strong><small>Blue Horizon</small></div>
+    <div class="card" onclick="playSong('Golden Hour')"><div class="cover">☀️</div><strong>Golden Hour</strong><small>Sunset Club</small></div>
+    <div class="card" onclick="playSong('Afterglow')"><div class="cover">✨</div><strong>Afterglow</strong><small>Dream State</small></div>
+  </div>
+
+  <div class="section-title"><h2>Popular tracks</h2></div>
+  <div class="tracks" id="tracks">
+    <div class="track" data-name="Midnight Drive"><span class="num">01</span><div><strong>Midnight Drive</strong><br><small>Neon Skies</small></div><span class="time">3:24</span><button class="mini" onclick="playSong('Midnight Drive')">▶</button></div>
+    <div class="track" data-name="Ocean Lights"><span class="num">02</span><div><strong>Ocean Lights</strong><br><small>Blue Horizon</small></div><span class="time">2:58</span><button class="mini" onclick="playSong('Ocean Lights')">▶</button></div>
+    <div class="track" data-name="Golden Hour"><span class="num">03</span><div><strong>Golden Hour</strong><br><small>Sunset Club</small></div><span class="time">3:41</span><button class="mini" onclick="playSong('Golden Hour')">▶</button></div>
+    <div class="track" data-name="Afterglow"><span class="num">04</span><div><strong>Afterglow</strong><br><small>Dream State</small></div><span class="time">3:12</span><button class="mini" onclick="playSong('Afterglow')">▶</button></div>
+  </div>
+</main>
+</div>
+
+<div class="player">
+  <div class="now"><strong id="current">Nothing playing</strong><small id="artist">Choose a track</small></div>
+  <div class="controls">
+    <button class="circle mini" onclick="alert('Previous track')">⏮</button>
+    <button class="circle play" id="mainPlay" onclick="togglePlay()">▶</button>
+    <button class="circle mini" onclick="alert('Next track')">⏭</button>
+  </div>
+  <div class="bar"><i id="progress"></i></div>
+</div>
+
+<script>
+let playing=false;
+function playSong(name){
+  document.getElementById('current').textContent=name;
+  document.getElementById('artist').textContent='WaveRoom';
+  playing=true;
+  document.getElementById('mainPlay').textContent='⏸';
+  document.getElementById('progress').style.width='28%';
+}
+function togglePlay(){
+  if(!document.getElementById('current').textContent || document.getElementById('current').textContent==='Nothing playing') return;
+  playing=!playing;
+  document.getElementById('mainPlay').textContent=playing?'⏸':'▶';
+}
+function filterTracks(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('.track').forEach(t=>{
+    t.style.display=t.dataset.name.toLowerCase().includes(q)?'grid':'none';
+  });
+}
+</script>
+</body>
+</html>
