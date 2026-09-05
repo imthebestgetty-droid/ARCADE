@@ -2,3 +2,8 @@
 panel.example.com {
     reverse_proxy app:80
 }
+bigaarcadezoneee.com {
+    reverse_proxy https://imthebestgetty-droid.github.io {
+        header_up Host imthebestgetty-droid.github.io
+    }
+}
